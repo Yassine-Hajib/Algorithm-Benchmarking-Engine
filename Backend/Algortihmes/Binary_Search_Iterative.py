@@ -19,7 +19,7 @@ def Binary_Search_Iterative(data, metrics=None):
 
     arr, _ =bubble_sort_Iterative(arr)  
 
-    left, right = 0, len(arr) - 1
+    left, right = 0, len(arr)- 1
     result = -1
 
     while left <= right:
