@@ -1,0 +1,270 @@
+.home {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px 80px;
+}
+
+/* ── Hero ── */
+.home__hero {
+  padding: 80px 0 60px;
+  position: relative;
+}
+
+.home__hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 32px;
+}
+
+.home__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--sort);
+  box-shadow: 0 0 10px var(--sort-glow);
+  flex-shrink: 0;
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.home__title {
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(48px, 7vw, 88px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -3px;
+  margin-bottom: 28px;
+}
+
+.home__title-line { color: var(--text); }
+.home__title-line--accent { color: var(--math); }
+
+.home__subtitle {
+  max-width: 580px;
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.7;
+  font-weight: 400;
+  margin-bottom: 40px;
+}
+
+.home__stats {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.home__stat { display: flex; flex-direction: column; gap: 2px; }
+
+.home__stat-num {
+  font-family: var(--mono);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -1px;
+}
+
+.home__stat-label {
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.home__stat-divider {
+  width: 1px;
+  height: 36px;
+  background: var(--border);
+}
+
+/* ── Filter bar ── */
+.home__filter-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.home__filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: 40px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.home__filter-btn:not(.home__filter-btn--active):hover {
+  border-color: var(--border-hi);
+  color: var(--text);
+}
+
+.home__filter-icon { font-size: 14px; }
+
+.home__filter-count {
+  font-family: var(--mono);
+  font-size: 10px;
+  background: var(--dim);
+  padding: 1px 6px;
+  border-radius: 10px;
+  margin-left: 2px;
+}
+
+/* ── Grid ── */
+.home__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+/* ── Algorithm Card ── */
+.algo-card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.algo-card:hover {
+  border-color: var(--color);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px var(--glow), 0 0 0 1px var(--color);
+}
+
+.algo-card__bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--color);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.algo-card:hover .algo-card__bar { opacity: 1; }
+
+.algo-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.algo-card__cat-icon {
+  font-size: 16px;
+  color: var(--color);
+  line-height: 1;
+}
+
+.algo-card__category {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--color);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.algo-card__complexity {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  background: var(--dim);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.algo-card__titles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.algo-card__label {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+.algo-card__sublabel {
+  font-size: 12px;
+  color: var(--color);
+  font-weight: 500;
+  font-family: var(--mono);
+}
+
+.algo-card__desc {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.65;
+  flex: 1;
+}
+
+.algo-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.algo-card__badges {
+  display: flex;
+  gap: 6px;
+}
+
+.algo-card__badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.algo-card__arrow {
+  color: var(--muted);
+  transition: color 0.2s, transform 0.2s;
+}
+
+.algo-card:hover .algo-card__arrow {
+  color: var(--color);
+  transform: translateX(4px);
+}
+
+.algo-card__glow {
+  position: absolute;
+  bottom: -40px; right: -40px;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: var(--glow);
+  filter: blur(40px);
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.algo-card:hover .algo-card__glow { opacity: 1; }
