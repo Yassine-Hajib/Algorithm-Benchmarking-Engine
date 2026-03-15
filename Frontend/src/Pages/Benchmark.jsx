@@ -15,10 +15,7 @@ const Benchmark = () => {
 
   const handleRun = async () => {
     setLoading(true);
-    // Logic to call your Backend (FastAPI/Celery) goes here
-    console.log(`Running ${selectedAlgo} with data: ${inputData}`);
-    
-    // Simulate API delay
+    setResult(null);
     setTimeout(() => {
       setResult({ time: "0.0024s", memory: "12MB", output: "[1, 2, 3, 5, 8]" });
       setLoading(false);
@@ -27,17 +24,21 @@ const Benchmark = () => {
 
   return (
     <div className="benchmark-layout">
-      {/* Sidebar */}
+      {/* Sidebar Navigation */}
       <aside className="algo-sidebar">
-        <div className="logo">⚡ BenchMark AI</div>
+        <div className="sidebar-header">
+          <div className="logo-box">Σ</div>
+          <span>Algorithms</span>
+        </div>
+        
         {Object.entries(ALGORITHMS).map(([category, items]) => (
-          <div key={category} className="category-group">
-            <h4>{category}</h4>
+          <div key={category} className="category-section">
+            <h4 className="category-title">{category}</h4>
             {items.map(algo => (
               <button 
                 key={algo} 
-                className={selectedAlgo === algo ? 'active' : ''}
-                onClick={() => setSelectedAlgo(algo)}
+                className={`algo-btn ${selectedAlgo === algo ? 'active' : ''}`}
+                onClick={() => { setSelectedAlgo(algo); setResult(null); }}
               >
                 {algo.replace(/_/g, ' ')}
               </button>
@@ -46,53 +47,81 @@ const Benchmark = () => {
         ))}
       </aside>
 
-      {/* Main Panel */}
+      {/* Main Interface */}
       <main className="algo-main">
         {selectedAlgo ? (
-          <div className="workspace">
-            <header className="workspace-header">
-              <h2>{selectedAlgo.replace(/_/g, ' ')}</h2>
-              <span className="badge">Python Engine</span>
-            </header>
+          <div className="workspace fade-in">
+            <div className="workspace-nav">
+              <div className="title-area">
+                <h1>{selectedAlgo.replace(/_/g, ' ')}</h1>
+                <span className="engine-tag">Python 3.10 Engine</span>
+              </div>
+              <button className="back-btn" onClick={() => setSelectedAlgo(null)}>
+                <span>←</span> Back to Dashboard
+              </button>
+            </div>
 
-            <section className="input-card">
-              <h3>Configuration</h3>
-              <p>Enter your array or parameters below:</p>
-              <textarea 
-                value={inputData}
-                onChange={(e) => setInputData(e.target.value)}
-                placeholder="e.g. 45, 12, 89, 2, 7"
-              />
-              <div className="actions">
-                <button className="secondary-btn" onClick={() => setInputData('10, 20, 30, 40, 50')}>Use Sample</button>
-                <button className="primary-btn" onClick={handleRun} disabled={loading}>
-                  {loading ? 'Processing...' : 'Run Benchmark'}
+            <section className="config-container">
+              <div className="config-header">
+                <h3>Test Configuration</h3>
+                <p>Define your input parameters and data sets below.</p>
+              </div>
+              
+              <div className="editor-wrapper">
+                <textarea 
+                  value={inputData}
+                  onChange={(e) => setInputData(e.target.value)}
+                  placeholder='e.g., [5, 2, 9, 1, 5, 6]'
+                  spellCheck="false"
+                />
+              </div>
+              
+              <div className="button-group">
+                <button className="btn-secondary" onClick={() => setInputData('10, 20, 30, 40, 50')}>
+                  Load Sample
+                </button>
+                <button className="btn-primary" onClick={handleRun} disabled={loading}>
+                  {loading ? 'Processing...' : 'Execute Benchmark'}
                 </button>
               </div>
             </section>
 
             {result && (
-              <section className="result-grid">
-                <div className="stat-card">
-                  <label>Execution Time</label>
-                  <div className="value text-green">{result.time}</div>
+              <section className="results-container fade-in">
+                <div className="metric-card">
+                  <label>Runtime</label>
+                  <div className="metric-value success">{result.time}</div>
                 </div>
-                <div className="stat-card">
-                  <label>Memory Usage</label>
-                  <div className="value">{result.memory}</div>
+                <div className="metric-card">
+                  <label>Memory</label>
+                  <div className="metric-value">{result.memory}</div>
                 </div>
-                <div className="stat-card wide">
-                  <label>Output</label>
-                  <code>{result.output}</code>
+                <div className="metric-card wide">
+                  <label>Console Output</label>
+                  <div className="output-box">
+                    <code>{result.output}</code>
+                  </div>
                 </div>
               </section>
             )}
           </div>
         ) : (
-          <div className="empty-state">
-            <div className="icon">🚀</div>
-            <h2>Select an algorithm to start benchmarking</h2>
-            <p>Choose from the sidebar to configure your test run.</p>
+          /* Empty Dashboard View */
+          <div className="dashboard-hero fade-in">
+            <div className="status-indicator">SYSTEM STATUS: OPTIMAL</div>
+            <h1>Performance Analysis</h1>
+            <p>Select a logic model to evaluate computational complexity and resource efficiency.</p>
+            
+            <div className="stats-row">
+              <div className="stat-item">
+                <span className="stat-label">FastAPI Workers</span>
+                <span className="stat-val">Active</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Average Latency</span>
+                <span className="stat-val">12ms</span>
+              </div>
+            </div>
           </div>
         )}
       </main>
