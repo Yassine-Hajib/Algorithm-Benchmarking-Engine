@@ -1,0 +1,40 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-brand {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1a1c23;
+}
+
+.nav-brand span {
+  font-size: 0.8rem;
+  background: #f1f3f5;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 5px;
+  color: #4dabf7;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #4b5563;
+  margin-left: 2rem;
+  font-weight: 500;
+}
+
+.btn-nav {
+  background: #4dabf7;
+  color: white !important;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+}
