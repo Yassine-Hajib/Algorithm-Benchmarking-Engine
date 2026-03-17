@@ -13,7 +13,7 @@ def iterativeFactoriel(n, metrics=None):
     if metrics["current_depth"] > metrics["max_depth"]:
         metrics["max_depth"] = metrics["current_depth"]
 
-    if n == 0:
+    if n ==0 :
         result = 1
     else:
         res = 1

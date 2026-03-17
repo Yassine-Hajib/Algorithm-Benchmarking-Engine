@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import './Benchmark.css';
 
 const ALGORITHMS = {
-  Sorting: ['Quick_Sort', 'Bubble_Sort_Iterative', 'Insertion_sort_Recursive'],
-  Searching: ['Binary_Search_Iterative', 'BFS_Iterative', 'DFS_Recursive'],
-  Math: ['Fibonnaci_Iterative', 'Factorial_iterative', 'Prime_Checker']
+  Sorting: ['Quick_Sort', 'Bubble_Sort', 'Insertion_Sort'],
+  Searching: ['Binary_Search', 'BFS', 'DFS'],
+  Math: ['Fibonacci', 'Factorial', 'Prime_Checker']
 };
 
 const Benchmark = () => {
@@ -13,22 +13,28 @@ const Benchmark = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
 
-  const handleRun = async () => {
+  const handleRun = () => {
     setLoading(true);
     setResult(null);
+    
+    // Simulating the dual response we expect from the backend
     setTimeout(() => {
-      setResult({ time: "0.0024s", memory: "12MB", output: "[1, 2, 3, 5, 8]" });
+      setResult({
+        iterative: { time: "0.0004s", memory: "12MB", depth: 1, calls: 1, output: "120" },
+        recursive: { time: "0.0028s", memory: "18MB", depth: 5, calls: 5, output: "120" },
+        winner: "Iterative"
+      });
       setLoading(false);
-    }, 1500);
+    }, 1000);
   };
 
   return (
     <div className="benchmark-layout">
-      {/* Sidebar Navigation */}
+      {/* Sidebar */}
       <aside className="algo-sidebar">
         <div className="sidebar-header">
           <div className="logo-box">Σ</div>
-          <span>Algorithms</span>
+          <span>AlgoBench <small>v1.0</small></span>
         </div>
         
         {Object.entries(ALGORITHMS).map(([category, items]) => (
@@ -47,81 +53,81 @@ const Benchmark = () => {
         ))}
       </aside>
 
-      {/* Main Interface */}
+      {/* Main Panel */}
       <main className="algo-main">
         {selectedAlgo ? (
           <div className="workspace fade-in">
-            <div className="workspace-nav">
+            <header className="workspace-nav">
               <div className="title-area">
                 <h1>{selectedAlgo.replace(/_/g, ' ')}</h1>
-                <span className="engine-tag">Python 3.10 Engine</span>
+                <div className="tags">
+                  <span className="engine-tag">Python 3.10</span>
+                  <span className="comparison-tag">Dual-Mode</span>
+                </div>
               </div>
               <button className="back-btn" onClick={() => setSelectedAlgo(null)}>
-                <span>←</span> Back to Dashboard
+                Close Analysis
               </button>
-            </div>
+            </header>
 
+            {/* Config Area */}
             <section className="config-container">
-              <div className="config-header">
-                <h3>Test Configuration</h3>
-                <p>Define your input parameters and data sets below.</p>
-              </div>
-              
               <div className="editor-wrapper">
+                <label>Input Data (n)</label>
                 <textarea 
                   value={inputData}
                   onChange={(e) => setInputData(e.target.value)}
-                  placeholder='e.g., [5, 2, 9, 1, 5, 6]'
-                  spellCheck="false"
+                  placeholder="Enter a value or array..."
                 />
               </div>
-              
-              <div className="button-group">
-                <button className="btn-secondary" onClick={() => setInputData('10, 20, 30, 40, 50')}>
-                  Load Sample
-                </button>
-                <button className="btn-primary" onClick={handleRun} disabled={loading}>
-                  {loading ? 'Processing...' : 'Execute Benchmark'}
-                </button>
-              </div>
+              <button className="btn-primary" onClick={handleRun} disabled={loading || !inputData}>
+                {loading ? 'Running Analysis...' : 'Start Comparison'}
+              </button>
             </section>
 
+            {/* Results Comparison Grid */}
             {result && (
-              <section className="results-container fade-in">
-                <div className="metric-card">
-                  <label>Runtime</label>
-                  <div className="metric-value success">{result.time}</div>
-                </div>
-                <div className="metric-card">
-                  <label>Memory</label>
-                  <div className="metric-value">{result.memory}</div>
-                </div>
-                <div className="metric-card wide">
-                  <label>Console Output</label>
-                  <div className="output-box">
-                    <code>{result.output}</code>
+              <div className="results-grid fade-in">
+                {['iterative', 'recursive'].map((mode) => (
+                  <div key={mode} className={`result-pane ${result.winner.toLowerCase() === mode ? 'winner-border' : ''}`}>
+                    <div className="pane-header">
+                      <h3>{mode.toUpperCase()}</h3>
+                      {result.winner.toLowerCase() === mode && <span className="winner-tag">More Efficient</span>}
+                    </div>
+                    
+                    <div className="metric-grid">
+                      <div className="metric-box">
+                        <label>Runtime</label>
+                        <span className="val">{result[mode].time}</span>
+                      </div>
+                      <div className="metric-box">
+                        <label>Memory</label>
+                        <span className="val">{result[mode].memory}</span>
+                      </div>
+                      <div className="metric-box">
+                        <label>Stack Depth</label>
+                        <span className="val">{result[mode].depth}</span>
+                      </div>
+                      <div className="metric-box">
+                        <label>Total Calls</label>
+                        <span className="val">{result[mode].calls}</span>
+                      </div>
+                    </div>
+
+                    <div className="output-preview">
+                      <label>Resulting Output</label>
+                      <code>{result[mode].output}</code>
+                    </div>
                   </div>
-                </div>
-              </section>
+                ))}
+              </div>
             )}
           </div>
         ) : (
-          /* Empty Dashboard View */
-          <div className="dashboard-hero fade-in">
-            <div className="status-indicator">SYSTEM STATUS: OPTIMAL</div>
-            <h1>Performance Analysis</h1>
-            <p>Select a logic model to evaluate computational complexity and resource efficiency.</p>
-            
-            <div className="stats-row">
-              <div className="stat-item">
-                <span className="stat-label">FastAPI Workers</span>
-                <span className="stat-val">Active</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-label">Average Latency</span>
-                <span className="stat-val">12ms</span>
-              </div>
-            </div>
+          <div className="dashboard-hero">
+            <div className="hero-icon">⚡</div>
+            <h1>Ready to Benchmark</h1>
+            <p>Select an algorithm from the sidebar to begin performance testing.</p>
           </div>
         )}
       </main>
