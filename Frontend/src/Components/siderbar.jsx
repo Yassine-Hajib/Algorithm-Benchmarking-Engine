@@ -1,0 +1,192 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Sidebar.css';
+
+/* ═══════════════════════════════════════════════════════════════════════
+   Algorithm registry — mirrors the Backend/Algorthmes folder exactly:
+   BFS_Iterative / BFS_Recursive
+   Binary_Search_Iterative / Binary_Search_Recursive
+   Bubble_Sort_Iterative / Bubble_Sort_Recursive
+   DFS_Iterative / DFS_Recursive
+   Factorial_iterative / Factoriel_recursive
+   Fibonnaci_Iterative / Fibonnaci_Recursive
+   Insertion_sort_Iterative / Insertion_sort_Recursive
+   Quick_Sort  (iterative only — no recursive file)
+   Prime_Checker (single mode)
+   Graph.py / Shearch.py / Sum_recursive.py — utility helpers, not exposed
+═══════════════════════════════════════════════════════════════════════ */
+
+export const ALGORITHMS = {
+  Sorting: {
+    color: '#00E5C3',
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="3" y1="6"  x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="15" y2="12"/>
+        <line x1="3" y1="18" x2="9"  y2="18"/>
+      </svg>
+    ),
+    items: [
+      { id: 'Bubble_Sort',    label: 'Bubble Sort',    complexity: 'O(n²)',      dual: true  },
+      { id: 'Insertion_Sort', label: 'Insertion Sort', complexity: 'O(n²)',      dual: true  },
+      { id: 'Quick_Sort',     label: 'Quick Sort',     complexity: 'O(n log n)', dual: false },
+    ],
+  },
+  Searching: {
+    color: '#60A5FA',
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    ),
+    items: [
+      { id: 'Binary_Search', label: 'Binary Search', complexity: 'O(log n)', dual: true },
+      { id: 'BFS',           label: 'BFS',           complexity: 'O(V+E)',   dual: true },
+      { id: 'DFS',           label: 'DFS',           complexity: 'O(V+E)',   dual: true },
+    ],
+  },
+  Math: {
+    color: '#FACC15',
+    icon: (
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="12" y1="2" x2="12" y2="22"/>
+        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+      </svg>
+    ),
+    items: [
+      { id: 'Fibonacci',     label: 'Fibonacci',     complexity: 'O(n)',  dual: true  },
+      { id: 'Factorial',     label: 'Factorial',     complexity: 'O(n)',  dual: true  },
+      { id: 'Prime_Checker', label: 'Prime Checker', complexity: 'O(√n)', dual: false },
+    ],
+  },
+};
+
+/* Flat lookup maps — consumed by Benchmark.jsx */
+export const COMPLEXITY_MAP = Object.values(ALGORITHMS)
+  .flatMap(c => c.items)
+  .reduce((a, { id, complexity }) => ({ ...a, [id]: complexity }), {});
+
+export const CATEGORY_MAP = Object.entries(ALGORITHMS)
+  .flatMap(([cat, { items }]) => items.map(({ id }) => [id, cat]))
+  .reduce((a, [id, cat]) => ({ ...a, [id]: cat }), {});
+
+export const DUAL_MODE_MAP = Object.values(ALGORITHMS)
+  .flatMap(c => c.items)
+  .reduce((a, { id, dual }) => ({ ...a, [id]: dual }), {});
+
+/* ════════════════════════════════════════════ */
+
+const Sidebar = ({ selectedAlgo, onSelectAlgo }) => {
+  const navigate = useNavigate();
+  const [collapsed, setCollapsed] = useState({});
+
+  const toggle = (cat) =>
+    setCollapsed(p => ({ ...p, [cat]: !p[cat] }));
+
+  const totalAlgos = Object.values(ALGORITHMS)
+    .flatMap(c => c.items).length;
+
+  return (
+    <aside className="sb">
+
+      {/* ── Logo ── */}
+      <div className="sb-logo" onClick={() => navigate('/')}>
+        <span className="sb-logo-mark">AB</span>
+        <div className="sb-logo-text">
+          <span className="sb-logo-name">AlgoBench</span>
+          <span className="sb-logo-version">v1.0</span>
+        </div>
+      </div>
+
+      <div className="sb-divider" />
+
+      {/* ── Section header ── */}
+      <div className="sb-section-header">
+        <span className="sb-section-label">Algorithms</span>
+        <span className="sb-section-count">{totalAlgos}</span>
+      </div>
+
+      {/* ── Navigation ── */}
+      <nav className="sb-nav">
+        {Object.entries(ALGORITHMS).map(([cat, { color, icon, items }]) => {
+          const open       = !collapsed[cat];
+          const hasActive  = items.some(a => a.id === selectedAlgo);
+
+          return (
+            <div key={cat} className="sb-group">
+
+              {/* Category button */}
+              <button
+                className={`sb-cat ${hasActive ? 'sb-cat--has-active' : ''}`}
+                onClick={() => toggle(cat)}
+                style={{ '--c': color }}
+              >
+                <span className="sb-cat-left">
+                  <span className="sb-cat-icon" style={{ color }}>{icon}</span>
+                  <span className="sb-cat-name">{cat}</span>
+                  <span className="sb-cat-pill">{items.length}</span>
+                </span>
+                <svg
+                  className={`sb-chevron ${open ? 'sb-chevron--open' : ''}`}
+                  width="11" height="11" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.5"
+                  strokeLinecap="round" strokeLinejoin="round"
+                >
+                  <polyline points="6 9 12 15 18 9"/>
+                </svg>
+              </button>
+
+              {/* Algo items */}
+              {open && (
+                <div className="sb-items">
+                  {items.map(({ id, label, complexity, dual }) => {
+                    const active = selectedAlgo === id;
+                    return (
+                      <button
+                        key={id}
+                        className={`sb-item ${active ? 'sb-item--active' : ''}`}
+                        onClick={() => onSelectAlgo(id)}
+                        style={{ '--c': color }}
+                      >
+                        <span className="sb-item-dot" />
+                        <span className="sb-item-name">{label}</span>
+                        <span className="sb-item-meta">
+                          {!dual && <span className="sb-single-badge">1×</span>}
+                          <span className="sb-item-o">{complexity}</span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </nav>
+
+      {/* ── Legend + footer ── */}
+      <div className="sb-footer">
+        <div className="sb-legend">
+          <span className="sb-legend-item">
+            <span className="sb-legend-dot sb-legend-dot--dual" />
+            Dual mode
+          </span>
+          <span className="sb-legend-item">
+            <span className="sb-legend-dot sb-legend-dot--single" />
+            Single mode
+          </span>
+        </div>
+        <div className="sb-status">
+          <span className="sb-status-dot" />
+          Backend ready · FastAPI
+        </div>
+      </div>
+    </aside>
+  );
+};
+
+export default Sidebar;
