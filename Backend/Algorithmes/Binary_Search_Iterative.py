@@ -1,4 +1,4 @@
-from Backend.Algortihmes.Bubble_Sort_Iterative import bubble_sort_Iterative
+from Backend.Algorithmes.Bubble_Sort_Iterative import bubble_sort_Iterative
 def Binary_Search_Iterative(data, metrics=None):
 
     if metrics is None:

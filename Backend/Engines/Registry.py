@@ -1,18 +1,18 @@
-from Backend.Algortihmes.Sum_recursive import summ
-from Backend.Algortihmes.Factoriel_recursive import factorial_with_metrics
-from Backend.Algortihmes.Factorial_iterative import iterativeFactoriel
-from Backend.Algortihmes.Fibonnaci_Recursive import Fibonnaci_Recursive
-from Backend.Algortihmes.Fibonnaci_Iterative import Fibonnaci_Iterative
-from Backend.Algortihmes.Bubble_Sort_Iterative import bubble_sort_Iterative
-from Backend.Algortihmes.Bubble_Sort_Recursive import bubble_sort_Recursive
-from Backend.Algortihmes.Binary_Search_Iterative import Binary_Search_Iterative
-from Backend.Algortihmes.Binary_Search_Recursive import Binary_Search_Recursive
-from Backend.Algortihmes.Insertion_sort_Iterative import Insertion_sort_Iterative
-from Backend.Algortihmes.Insertion_sort_Recursive import Insertion_sort_Recursive
-from Backend.Algortihmes.BFS_Iterative import BFS_Iterative
-from Backend.Algortihmes.BFS_Recursive import BFS_Recursive
-from Backend.Algortihmes.DFS_Iterative import DFS_Iterative
-from Backend.Algortihmes.DFS_Recursive import DFS_Recursive
+from Backend.Algorithmes.Sum_recursive import summ
+from Backend.Algorithmes.Factoriel_recursive import factorial_with_metrics
+from Backend.Algorithmes.Factorial_iterative import iterativeFactoriel
+from Backend.Algorithmes.Fibonnaci_Recursive import Fibonnaci_Recursive
+from Backend.Algorithmes.Fibonnaci_Iterative import Fibonnaci_Iterative
+from Backend.Algorithmes.Bubble_Sort_Iterative import bubble_sort_Iterative
+from Backend.Algorithmes.Bubble_Sort_Recursive import bubble_sort_Recursive
+from Backend.Algorithmes.Binary_Search_Iterative import Binary_Search_Iterative
+from Backend.Algorithmes.Binary_Search_Recursive import Binary_Search_Recursive
+from Backend.Algorithmes.Insertion_sort_Iterative import Insertion_sort_Iterative
+from Backend.Algorithmes.Insertion_sort_Recursive import Insertion_sort_Recursive
+from Backend.Algorithmes.BFS_Iterative import BFS_Iterative
+from Backend.Algorithmes.BFS_Recursive import BFS_Recursive
+from Backend.Algorithmes.DFS_Iterative import DFS_Iterative
+from Backend.Algorithmes.DFS_Recursive import DFS_Recursive
 ALGORITHMS = {
     "sum": summ,
     "factorial_recursive"     : factorial_with_metrics,
