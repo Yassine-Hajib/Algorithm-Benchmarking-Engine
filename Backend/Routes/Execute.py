@@ -21,4 +21,11 @@ def run(req: RunRequest):
         raise HTTPException(status_code=500, detail=f"Engine Error: {str(e)}")
     
 
-# compare route remains similar
+@router.post("/compare", response_model=CompareOut)
+def compare(req: CompareRequest):
+    try:
+        return compare_algorithms(req.algorithm1, req.algorithm2, req.input)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Engine Error: {str(e)}")

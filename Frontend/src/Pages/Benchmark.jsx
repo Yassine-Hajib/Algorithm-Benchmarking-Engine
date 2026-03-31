@@ -40,45 +40,27 @@ const Benchmark = () => {
     setInputData('');
   };
 
-
-const handleStartBenchmark = async () => {
-  setLoading(true);
-  try {
-    const data = await api.runBenchmark(selectedAlgo, inputCode);
-    setResults(data); 
-  } catch (err) {
-    alert("Connection to Backend failed!");
-  } finally {
-    setLoading(false);
-  }
-};  
-
-
-
+ 
   const handleRun = async () => {
-    if (!inputData.trim()) return;
-    
-    setLoading(true);
-    setResult(null);
-    setError(null);
+  if (!inputData.trim()) return;
+  setLoading(true);
+  setResult(null);
+  setError(null);
 
- try {
-    //  Call the real FastAPI backend
-    const data = await api.runBenchmark(selectedAlgo, inputData);
-    
-    
+  try {
+    const data = await api.runBenchmark(selectedAlgo, inputData, isDual);
     setResult(data);
     setRunCount(prev => prev + 1);
-
-    resultsRef.current?.scrollIntoView({ behavior: 'smooth' });
-
+    setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
   } catch (err) {
     console.error("Benchmark Error:", err);
-    setError("Backend connection failed. Is Uvicorn running?");
+    setError(err.message || "Backend connection failed. Is Uvicorn running?");
   } finally {
     setLoading(false);
   }
-  };
+};
+
+
 
   return (
     <div className="bm-layout">
@@ -135,40 +117,53 @@ const handleStartBenchmark = async () => {
                   </div>
                 )}
 
-               {result && (
+              
+                  {result && (
   <div className="bm-results">
     <div className="bm-section-label">
-      <span className="bm-dot" style={{background: 'var(--teal)'}} /> 
-      Analysis Results for Run #{runCount}
-    </div>
-    
-    <div className="bm-metrics-grid">
-      <MetricCard 
-        label="Execution Time" 
-        value={`${(result.execution_time * 1000).toFixed(4)} ms`} 
-        icon={Ico.Time} 
-        trend="Lower is better"
-      />
-      <MetricCard 
-        label="Recursion Depth" 
-        value={result.max_depth} 
-        icon={Ico.Depth} 
-      />
-      <MetricCard 
-        label="Total Calls" 
-        value={result.call_count} 
-        icon={Ico.Calls} 
-      />
+      <span className="bm-dot" style={{background: 'var(--teal)'}} />
+      Analysis Results — Run #{runCount}
     </div>
 
-    <div className="bm-output-console">
-      <div className="bm-console-header">Console Output</div>
-      <pre className="bm-console-body">
-        {JSON.stringify(result.result, null, 2)}
-      </pre>
+    <div className={`bm-panes ${isDual && result.recursive ? 'bm-panes--dual' : 'bm-panes--single'}`}>
+      {['iterative', 'recursive'].map(mode => {
+        const d = result[mode];
+        if (!d) return null;
+        const isWinner = isDual && result.recursive
+          ? (result.iterative.execution_time <= result.recursive.execution_time
+              ? mode === 'iterative'
+              : mode === 'recursive')
+          : mode === 'iterative';
+
+        return (
+          <div key={mode} className={`bm-pane ${isWinner && isDual ? 'bm-pane--winner' : ''}`}>
+            <div className="bm-pane-hd">
+              <h2 className="bm-pane-title">
+                {mode.charAt(0).toUpperCase() + mode.slice(1)}
+              </h2>
+              {isWinner && isDual && result.recursive && (
+                <span className="bm-pane-winner-tag">{Ico.Trophy} Winner</span>
+              )}
+            </div>
+
+            <div className="bm-metrics">
+              <MetricCard label="Exec Time"   value={`${(d.execution_time * 1000).toFixed(4)} ms`} icon={Ico.Time}   />
+              <MetricCard label="Call Depth"  value={d.max_depth}  icon={Ico.Depth}  />
+              <MetricCard label="Total Calls" value={d.call_count} icon={Ico.Calls}  />
+            </div>
+
+            <div className="bm-output">
+              <span className="bm-output-lbl">Output</span>
+              <code className="bm-output-val">{JSON.stringify(d.result)}</code>
+            </div>
+          </div>
+        );
+      })}
     </div>
   </div>
 )}
+
+
 
                 {!result && !loading && (
                   <div className="bm-empty">

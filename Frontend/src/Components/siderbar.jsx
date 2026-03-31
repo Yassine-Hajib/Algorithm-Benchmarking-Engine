@@ -2,20 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 
-/* ═══════════════════════════════════════════════════════════════════════
-   Algorithm registry — mirrors the Backend/Algorthmes folder exactly:
-   BFS_Iterative / BFS_Recursive
-   Binary_Search_Iterative / Binary_Search_Recursive
-   Bubble_Sort_Iterative / Bubble_Sort_Recursive
-   DFS_Iterative / DFS_Recursive
-   Factorial_iterative / Factoriel_recursive
-   Fibonnaci_Iterative / Fibonnaci_Recursive
-   Insertion_sort_Iterative / Insertion_sort_Recursive
-   Quick_Sort  (iterative only — no recursive file)
-   Prime_Checker (single mode)
-   Graph.py / Shearch.py / Sum_recursive.py — utility helpers, not exposed
-═══════════════════════════════════════════════════════════════════════ */
-
 export const ALGORITHMS = {
   Sorting: {
     color: '#00E5C3',
@@ -28,9 +14,11 @@ export const ALGORITHMS = {
       </svg>
     ),
     items: [
-      { id: 'Bubble_Sort',    label: 'Bubble Sort',    complexity: 'O(n²)',      dual: true  },
-      { id: 'Insertion_Sort', label: 'Insertion Sort', complexity: 'O(n²)',      dual: true  },
-      { id: 'Quick_Sort',     label: 'Quick Sort',     complexity: 'O(n log n)', dual: false },
+      { id: 'Bubble_Sort',    label: 'Bubble Sort',    complexity: 'O(n²)',      dual: true },
+      { id: 'Insertion_Sort', label: 'Insertion Sort', complexity: 'O(n²)',      dual: true },
+      { id: 'Quick_Sort',     label: 'Quick Sort',     complexity: 'O(n log n)', dual: true },
+      { id: 'Merge_Sort',     label: 'Merge Sort',     complexity: 'O(n log n)', dual: true },
+      { id: 'Heap_Sort',      label: 'Heap Sort',      complexity: 'O(n log n)', dual: true },
     ],
   },
   Searching: {
@@ -44,6 +32,7 @@ export const ALGORITHMS = {
     ),
     items: [
       { id: 'Binary_Search', label: 'Binary Search', complexity: 'O(log n)', dual: true },
+      { id: 'Linear_Search', label: 'Linear Search', complexity: 'O(n)',     dual: true },
       { id: 'BFS',           label: 'BFS',           complexity: 'O(V+E)',   dual: true },
       { id: 'DFS',           label: 'DFS',           complexity: 'O(V+E)',   dual: true },
     ],
@@ -58,14 +47,18 @@ export const ALGORITHMS = {
       </svg>
     ),
     items: [
-      { id: 'Fibonacci',     label: 'Fibonacci',     complexity: 'O(n)',  dual: true  },
-      { id: 'Factorial',     label: 'Factorial',     complexity: 'O(n)',  dual: true  },
-      { id: 'Prime_Checker', label: 'Prime Checker', complexity: 'O(√n)', dual: false },
+      { id: 'Fibonacci',     label: 'Fibonacci',     complexity: 'O(n)',  dual: true },
+      { id: 'Factorial',     label: 'Factorial',     complexity: 'O(n)',  dual: true },
+      { id: 'Prime_Checker', label: 'Prime Checker', complexity: 'O(√n)', dual: true },
+      { id: 'Power',         label: 'Fast Power',    complexity: 'O(log n)', dual: true },
+      { id: 'GCD',           label: 'GCD',           complexity: 'O(log n)', dual: true },
+      { id: 'Palindrome',    label: 'Palindrome',    complexity: 'O(n)',  dual: true },
+      { id: 'Hanoi',         label: 'Tower of Hanoi',complexity: 'O(2ⁿ)', dual: true },
     ],
   },
 };
 
-/* Flat lookup maps — consumed by Benchmark.jsx */
+/* Flat lookup maps consumed by Benchmark.jsx */
 export const COMPLEXITY_MAP = Object.values(ALGORITHMS)
   .flatMap(c => c.items)
   .reduce((a, { id, complexity }) => ({ ...a, [id]: complexity }), {});
@@ -78,7 +71,24 @@ export const DUAL_MODE_MAP = Object.values(ALGORITHMS)
   .flatMap(c => c.items)
   .reduce((a, { id, dual }) => ({ ...a, [id]: dual }), {});
 
-/* ════════════════════════════════════════════ */
+export const INPUT_HINT_MAP = {
+  Bubble_Sort:    '[5, 2, 8, 1, 9]',
+  Insertion_Sort: '[5, 2, 8, 1, 9]',
+  Quick_Sort:     '[5, 2, 8, 1, 9]',
+  Merge_Sort:     '[5, 2, 8, 1, 9]',
+  Heap_Sort:      '[5, 2, 8, 1, 9]',
+  Binary_Search:  '[1, 3, 5, 7, 9, 5]  ← last number is the target',
+  Linear_Search:  '[4, 7, 2, 9, 1, 7]  ← last number is the target',
+  BFS:            '6  (auto-builds a graph)',
+  DFS:            '6  (auto-builds a graph)',
+  Fibonacci:      '10',
+  Factorial:      '8',
+  Prime_Checker:  '17',
+  Power:          '{"base": 2, "exp": 10}',
+  GCD:            '{"a": 48, "b": 18}',
+  Palindrome:     '"racecar"',
+  Hanoi:          '4',
+};
 
 const Sidebar = ({ selectedAlgo, onSelectAlgo }) => {
   const navigate = useNavigate();
@@ -92,8 +102,6 @@ const Sidebar = ({ selectedAlgo, onSelectAlgo }) => {
 
   return (
     <aside className="sb">
-
-      {/* ── Logo ── */}
       <div className="sb-logo" onClick={() => navigate('/')}>
         <span className="sb-logo-mark">AB</span>
         <div className="sb-logo-text">
@@ -104,22 +112,18 @@ const Sidebar = ({ selectedAlgo, onSelectAlgo }) => {
 
       <div className="sb-divider" />
 
-      {/* ── Section header ── */}
       <div className="sb-section-header">
         <span className="sb-section-label">Algorithms</span>
         <span className="sb-section-count">{totalAlgos}</span>
       </div>
 
-      {/* ── Navigation ── */}
       <nav className="sb-nav">
         {Object.entries(ALGORITHMS).map(([cat, { color, icon, items }]) => {
-          const open       = !collapsed[cat];
-          const hasActive  = items.some(a => a.id === selectedAlgo);
+          const open      = !collapsed[cat];
+          const hasActive = items.some(a => a.id === selectedAlgo);
 
           return (
             <div key={cat} className="sb-group">
-
-              {/* Category button */}
               <button
                 className={`sb-cat ${hasActive ? 'sb-cat--has-active' : ''}`}
                 onClick={() => toggle(cat)}
@@ -140,7 +144,6 @@ const Sidebar = ({ selectedAlgo, onSelectAlgo }) => {
                 </svg>
               </button>
 
-              {/* Algo items */}
               {open && (
                 <div className="sb-items">
                   {items.map(({ id, label, complexity, dual }) => {
@@ -168,7 +171,6 @@ const Sidebar = ({ selectedAlgo, onSelectAlgo }) => {
         })}
       </nav>
 
-      {/* ── Legend + footer ── */}
       <div className="sb-footer">
         <div className="sb-legend">
           <span className="sb-legend-item">
