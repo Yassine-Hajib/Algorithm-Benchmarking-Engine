@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
 
@@ -49,21 +49,35 @@ const FEATURES = [
   },
 ];
 
-const STATS = [];
-
 const HomePage = () => {
   const navigate = useNavigate();
-  const [tick, setTick] = useState(0);
+  const [stats, setStats] = useState([
+    { label: 'Benchmarks Run', value: '0' },
+    { label: 'Avg. Latency', value: '0ms' },
+    { label: 'Active Runtimes', value: 'Python 3.x' }
+  ]);
 
-  // Subtle ticker for the hero decoration
+  /**
+   * API FETCH: LIVE ENGINE STATS
+   * This is where you will eventually call your FastAPI 
+   * to get real numbers for the hero section.
+   */
   useEffect(() => {
-    const id = setInterval(() => setTick(t => t + 1), 80);
-    return () => clearInterval(id);
+    const fetchGlobalStats = async () => {
+      try {
+        // const response = await fetch('YOUR_API/stats');
+        // const data = await response.json();
+        // setStats(data);
+        console.log("HomePage connected. Waiting for FastAPI stats...");
+      } catch (err) {
+        console.error("Could not fetch live stats.");
+      }
+    };
+    fetchGlobalStats();
   }, []);
 
   return (
     <div className="hp">
-
       {/* ── NAVBAR ── */}
       <nav className="hp-nav">
         <div className="hp-logo">
@@ -83,14 +97,12 @@ const HomePage = () => {
 
       {/* ── HERO ── */}
       <section className="hp-hero">
-        {/* Grid background */}
         <div className="hp-grid-bg" aria-hidden="true">
           {Array.from({ length: 12 }).map((_, i) => (
             <div key={i} className="hp-grid-col" />
           ))}
         </div>
 
-        {/* Glow orbs */}
         <div className="hp-orb hp-orb-1" aria-hidden="true" />
         <div className="hp-orb hp-orb-2" aria-hidden="true" />
 
@@ -116,11 +128,10 @@ const HomePage = () => {
               Launch Engine
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </button>
-           
           </div>
 
           <div className="hp-stats-row">
-            {STATS.map((s, i) => (
+            {stats.map((s, i) => (
               <div key={i} className="hp-stat">
                 <span className="hp-stat-value">{s.value}</span>
                 <span className="hp-stat-label">{s.label}</span>
@@ -137,15 +148,12 @@ const HomePage = () => {
           </div>
           <div className="hp-terminal-body">
             <p><span className="t-kw">import</span> algobench <span className="t-kw">as</span> ab</p>
-            <p className="t-blank"> </p>
             <p><span className="t-var">bench</span> = ab.<span className="t-fn">Benchmark</span>()</p>
             <p><span className="t-var">bench</span>.<span className="t-fn">run</span>(<span className="t-str">"fibonacci"</span>, n=<span className="t-num">40</span>)</p>
             <p className="t-blank"> </p>
             <p><span className="t-comment"># Results ────────────────────</span></p>
-            <p><span className="t-out">✓ iterative </span><span className="t-val">0.000012s</span>  <span className="t-badge t-green">FAST</span></p>
-            <p><span className="t-out">✓ recursive </span><span className="t-val">1.203400s</span>  <span className="t-badge t-red">SLOW</span></p>
-            <p><span className="t-out">✓ memoized  </span><span className="t-val">0.000019s</span>  <span className="t-badge t-green">FAST</span></p>
-            <p className="t-blank"> </p>
+            <p><span className="t-out">✓ iterative </span><span className="t-val">0.000012s</span></p>
+            <p><span className="t-out">✓ recursive </span><span className="t-val">1.203400s</span></p>
             <p className="t-cursor">▌</p>
           </div>
         </div>
@@ -156,16 +164,12 @@ const HomePage = () => {
         <div className="hp-features-inner">
           <div className="hp-section-head">
             <span className="hp-section-label">Core Capabilities</span>
-            <h2 className="hp-section-h2">Everything you need<br />to Understund Algorithme </h2>
+            <h2 className="hp-section-h2">Everything you need<br />to Understand Algorithms</h2>
           </div>
 
           <div className="hp-cards">
             {FEATURES.map((f, i) => (
-              <div
-                key={i}
-                className="hp-card"
-                style={{ '--accent': f.accent }}
-              >
+              <div key={i} className="hp-card" style={{ '--accent': f.accent }}>
                 <div className="hp-card-top">
                   <div className="hp-card-icon" style={{ color: f.accent, borderColor: f.accent + '30' }}>
                     {f.icon}

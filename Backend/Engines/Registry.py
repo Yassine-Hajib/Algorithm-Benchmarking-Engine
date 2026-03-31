@@ -13,6 +13,7 @@ from Backend.Algorithmes.BFS_Iterative import BFS_Iterative
 from Backend.Algorithmes.BFS_Recursive import BFS_Recursive
 from Backend.Algorithmes.DFS_Iterative import DFS_Iterative
 from Backend.Algorithmes.DFS_Recursive import DFS_Recursive
+
 ALGORITHMS = {
     "sum": summ,
     "factorial_recursive"     : factorial_with_metrics,
@@ -31,3 +32,11 @@ ALGORITHMS = {
     "DFS_Recursive" : DFS_Recursive 
 
 }
+
+def get_algorithm_metadata():
+    """
+    Optional helper: Useful if you want the API to tell the 
+    frontend which algorithms support 'Compare Mode'.
+    """
+    return {name: {"id": name, "has_dual_mode": "_recursive" in name or "_iterative" in name} 
+            for name in ALGORITHMS.keys()}
