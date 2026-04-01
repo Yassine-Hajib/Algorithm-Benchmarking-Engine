@@ -1,5 +1,9 @@
 def Hanoi_Iterative(n, metrics=None):
-   
+    """
+    Solves Tower of Hanoi iteratively.
+    Input: n = number of disks (plain integer or {"n": 4})
+    Returns: list of move strings
+    """
     if metrics is None:
         metrics = {"call_count": 0, "current_depth": 0, "max_depth": 0}
 
@@ -8,36 +12,32 @@ def Hanoi_Iterative(n, metrics=None):
     if metrics["current_depth"] > metrics["max_depth"]:
         metrics["max_depth"] = metrics["current_depth"]
 
+    # Handle dict input {"n": 4} or plain integer
+    if isinstance(n, dict):
+        n = n.get("n", 4)
+    n = int(n)
+
     moves = []
-    total_moves = (2 ** n) - 1
 
-   
-    source = "A"
-    dest = "C" if n % 2 != 0 else "B"
-    aux = "B" if n % 2 != 0 else "C"
+    # Iterative using explicit stack
+    # Each frame: (disks, source, target, auxiliary)
+    stack = [(n, "A", "C", "B")]
 
-    pegs = {source: list(range(n, 0, -1)), aux: [], dest: []}
-
-    def move(frm, to):
+    while stack:
+        disks, src, tgt, aux = stack.pop()
         metrics["call_count"] += 1
-        disk = pegs[frm].pop()
-        pegs[to].append(disk)
-        moves.append(f"Move disk {disk}: {frm} → {to}")
 
-    pairs = [(source, dest), (source, aux), (aux, dest)]
+        if disks == 0:
+            continue
 
-    for i in range(1, total_moves + 1):
-        pair = pairs[(i % 3) - 1]
-        frm, to = pair
+        if disks == 1:
+            moves.append(f"Move disk 1: {src} -> {tgt}")
+            continue
 
-        # Always move smaller onto larger 
-        top_frm = pegs[frm][-1] if pegs[frm] else float('inf')
-        top_to = pegs[to][-1]  if pegs[to]  else float('inf')
-
-        if top_frm < top_to:
-            move(frm, to)
-        else:
-            move(to, frm)
+        # Push frames in reverse order
+        stack.append((disks - 1, aux, tgt, src))
+        stack.append((1, src, tgt, aux))
+        stack.append((disks - 1, src, aux, tgt))
 
     metrics["current_depth"] -= 1
     return moves, metrics

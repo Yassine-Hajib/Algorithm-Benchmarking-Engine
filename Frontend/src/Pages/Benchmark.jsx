@@ -3,6 +3,8 @@ import Sidebar, {
   COMPLEXITY_MAP,
   CATEGORY_MAP,
   DUAL_MODE_MAP,
+  PLACEHOLDER_MAP,
+  HINT_MAP
 } from '../Components/siderbar';
 import CodeEditor from '../Components/CodeEditor';
 import MetricCard from '../Components/MetricsCard';
@@ -94,6 +96,8 @@ const Benchmark = () => {
                   label="input.py"
                   value={inputData}
                   onChange={e => setInputData(e.target.value)}
+                  placeholder={PLACEHOLDER_MAP[selectedAlgo]||'Enter Your input'}
+                  hint={HINT_MAP[selectedAlgo]}
                   disabled={loading}
                 />
 

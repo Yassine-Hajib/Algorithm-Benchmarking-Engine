@@ -47,18 +47,19 @@ export const ALGORITHMS = {
       </svg>
     ),
     items: [
-      { id: 'Fibonacci',     label: 'Fibonacci',     complexity: 'O(n)',  dual: true },
-      { id: 'Factorial',     label: 'Factorial',     complexity: 'O(n)',  dual: true },
-      { id: 'Prime_Checker', label: 'Prime Checker', complexity: 'O(√n)', dual: true },
-      { id: 'Power',         label: 'Fast Power',    complexity: 'O(log n)', dual: true },
-      { id: 'GCD',           label: 'GCD',           complexity: 'O(log n)', dual: true },
-      { id: 'Palindrome',    label: 'Palindrome',    complexity: 'O(n)',  dual: true },
-      { id: 'Hanoi',         label: 'Tower of Hanoi',complexity: 'O(2ⁿ)', dual: true },
+      { id: 'Fibonacci',     label: 'Fibonacci',      complexity: 'O(n)',      dual: true },
+      { id: 'Factorial',     label: 'Factorial',      complexity: 'O(n)',      dual: true },
+      { id: 'Prime_Checker', label: 'Prime Checker',  complexity: 'O(√n)',     dual: true },
+      { id: 'Power',         label: 'Fast Power',     complexity: 'O(log n)',  dual: true },
+      { id: 'GCD',           label: 'GCD',            complexity: 'O(log n)',  dual: true },
+      { id: 'Palindrome',    label: 'Palindrome',     complexity: 'O(n)',      dual: true },
+      { id: 'Hanoi',         label: 'Tower of Hanoi', complexity: 'O(2ⁿ)',     dual: true },
     ],
   },
 };
 
-/* Flat lookup maps consumed by Benchmark.jsx */
+/* ── Flat lookup maps consumed by Benchmark.jsx ── */
+
 export const COMPLEXITY_MAP = Object.values(ALGORITHMS)
   .flatMap(c => c.items)
   .reduce((a, { id, complexity }) => ({ ...a, [id]: complexity }), {});
@@ -71,16 +72,17 @@ export const DUAL_MODE_MAP = Object.values(ALGORITHMS)
   .flatMap(c => c.items)
   .reduce((a, { id, dual }) => ({ ...a, [id]: dual }), {});
 
-export const INPUT_HINT_MAP = {
+/* What shows inside the textarea before the user types */
+export const PLACEHOLDER_MAP = {
   Bubble_Sort:    '[5, 2, 8, 1, 9]',
   Insertion_Sort: '[5, 2, 8, 1, 9]',
   Quick_Sort:     '[5, 2, 8, 1, 9]',
   Merge_Sort:     '[5, 2, 8, 1, 9]',
   Heap_Sort:      '[5, 2, 8, 1, 9]',
-  Binary_Search:  '[1, 3, 5, 7, 9, 5]  ← last number is the target',
-  Linear_Search:  '[4, 7, 2, 9, 1, 7]  ← last number is the target',
-  BFS:            '6  (auto-builds a graph)',
-  DFS:            '6  (auto-builds a graph)',
+  Binary_Search:  '[1, 3, 5, 7, 9, 5]',
+  Linear_Search:  '[4, 7, 2, 9, 1, 7]',
+  BFS:            '6',
+  DFS:            '6',
   Fibonacci:      '10',
   Factorial:      '8',
   Prime_Checker:  '17',
@@ -89,6 +91,28 @@ export const INPUT_HINT_MAP = {
   Palindrome:     '"racecar"',
   Hanoi:          '4',
 };
+
+/* The small grey hint line shown below the editor */
+export const HINT_MAP = {
+  Bubble_Sort:    'Pass an array of numbers to sort.',
+  Insertion_Sort: 'Pass an array of numbers to sort.',
+  Quick_Sort:     'Pass an array of numbers to sort.',
+  Merge_Sort:     'Pass an array of numbers to sort.',
+  Heap_Sort:      'Pass an array of numbers to sort.',
+  Binary_Search:  'Last number is the target. e.g. [1,3,5,7,9, 5] searches for 5.',
+  Linear_Search:  'Last number is the target. e.g. [4,7,2,9,1, 7] searches for 7.',
+  BFS:            'Type a number to auto-build a graph, or paste {"graph":{...},"start":"A"}.',
+  DFS:            'Type a number to auto-build a graph, or paste {"graph":{...},"start":"A"}.',
+  Fibonacci:      'Pass an integer n — returns the nth Fibonacci number.',
+  Factorial:      'Pass an integer n — returns n! (n factorial).',
+  Prime_Checker:  'Pass an integer — returns true if prime, false otherwise.',
+  Power:          'Pass {"base": 2, "exp": 10} — returns base raised to exp.',
+  GCD:            'Pass {"a": 48, "b": 18} — returns the greatest common divisor.',
+  Palindrome:     'Pass a string like "racecar" or a number like 12321.',
+  Hanoi:          'Pass an integer (number of disks). Recommended max: 10.',
+};
+
+/* ══════════════════════════════════════════════════════════════ */
 
 const Sidebar = ({ selectedAlgo, onSelectAlgo }) => {
   const navigate = useNavigate();

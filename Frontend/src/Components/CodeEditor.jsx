@@ -1,16 +1,6 @@
 import React, { useRef, useState } from 'react';
 import './CodeEditor.css';
 
-/**
- * CodeEditor — styled input area for benchmark parameters
- * Props:
- *   value       {string}
- *   onChange    {fn}
- *   placeholder {string}
- *   label       {string}
- *   hint        {string}   — shown below as helper text
- *   disabled    {boolean}
- */
 const CodeEditor = ({ value, onChange, placeholder, label, hint, disabled }) => {
   const textareaRef = useRef(null);
   const [focused, setFocused] = useState(false);
@@ -57,7 +47,7 @@ const CodeEditor = ({ value, onChange, placeholder, label, hint, disabled }) => 
           onChange={onChange}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
-          placeholder={placeholder || 'Enter a value or array, e.g.  40  or  [5, 2, 8, 1]'}
+          placeholder={placeholder || 'Enter a value or array…'}
           disabled={disabled}
           spellCheck={false}
           autoComplete="off"
