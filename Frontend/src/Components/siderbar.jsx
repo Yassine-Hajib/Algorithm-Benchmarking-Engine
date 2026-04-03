@@ -58,7 +58,7 @@ export const ALGORITHMS = {
   },
 };
 
-/* ── Flat lookup maps consumed by Benchmark.jsx ── */
+
 
 export const COMPLEXITY_MAP = Object.values(ALGORITHMS)
   .flatMap(c => c.items)
