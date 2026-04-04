@@ -92,7 +92,7 @@ export const PLACEHOLDER_MAP = {
   Hanoi:          '4',
 };
 
-/* The small grey hint line shown below the editor */
+
 export const HINT_MAP = {
   Bubble_Sort:    'Pass an array of numbers to sort.',
   Insertion_Sort: 'Pass an array of numbers to sort.',
@@ -112,7 +112,7 @@ export const HINT_MAP = {
   Hanoi:          'Pass an integer (number of disks). Recommended max: 10.',
 };
 
-/* ══════════════════════════════════════════════════════════════ */
+
 
 const Sidebar = ({ selectedAlgo, onSelectAlgo }) => {
   const navigate = useNavigate();

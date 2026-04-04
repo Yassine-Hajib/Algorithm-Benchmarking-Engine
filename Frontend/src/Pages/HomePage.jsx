@@ -95,7 +95,7 @@ const HomePage = () => {
         </div>
       </nav>
 
-      {/* ── HERO ── */}
+      
       <section className="hp-hero">
         <div className="hp-grid-bg" aria-hidden="true">
           {Array.from({ length: 12 }).map((_, i) => (

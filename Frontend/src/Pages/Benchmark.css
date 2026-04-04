@@ -465,9 +465,8 @@ body { background: var(--bg); }
   padding: 5px 14px; border-radius: 100px;
 }
 
-/* ══════════════════════════
-   RESPONSIVE
-══════════════════════════ */
+
+
 @media (max-width: 1100px) {
   .bm-body { grid-template-columns: 1fr; }
   .bm-left { border-right: none; border-bottom: 1px solid var(--border); }
@@ -478,4 +477,27 @@ body { background: var(--bg); }
   .bm-left, .bm-right { padding: 18px 14px; }
   .bm-metrics { grid-template-columns: 1fr 1fr; }
   .bm-winner-speed { display: none; }
+}
+
+/* ── Add this at the bottom of Benchmark.css ── */
+
+.bm-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #f87171;
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  white-space: pre-line;
+}
+
+.bm-error svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #f87171;
 }

@@ -18,33 +18,21 @@ git clone https://github.com/Yassine-Hajib/Algorithm-Benchmarking-Engine.git
 cd "Algorithm-Benchmarking-Engine"
 ```
  
-### 2. Set up the Python virtual environment
- 
-```bash
-# Create the virtual environment
+# Create virtual environment
 python -m venv venv
- 
+
 # Activate it
-# On Windows:
-.\venv\Scripts\activate
- 
 # On Mac/Linux:
 source venv/bin/activate
-```
- 
-# 3. Install Python dependencies
- 
-    pip install -r Backend/Requirements.txt
+# On Windows:
+.\venv\Scripts\activate
 
-# 4. Start the FastAPI backend
- 
-    Remove-Item -Recurse -Force .venv-1
- 
+# Install dependencies
+pip install -r Backend/Requirements.txt
 
- 
-> The interactive API docs are available at: **http://127.0.0.1:8000/docs**
- 
-# 5. Open a second terminal and start the React frontend
+# Run from the project root (not inside Backend/)
+uvicorn Backend.App.Main:app --reload
+# Open a second terminal and start the React frontend
 
     cd Frontend
     npm install
