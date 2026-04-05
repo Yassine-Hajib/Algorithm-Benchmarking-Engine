@@ -193,10 +193,17 @@ const Benchmark = () => {
                               <MetricCard label="Total Calls" value={d.call_count} icon={Ico.Calls} />
                             </div>
 
-                            <div className="bm-output">
-                              <span className="bm-output-lbl">Output</span>
-                              <code className="bm-output-val">{JSON.stringify(d.result)}</code>
-                            </div>
+                           <div className="bm-output">
+                                  <span className="bm-output-lbl">Output</span>
+                                  <code className="bm-output-val">
+                                    {Array.isArray(d.result)
+                                      ? d.result.join('\n')
+                                      : typeof d.result === 'object' && d.result !== null
+                                        ? JSON.stringify(d.result, null, 2)
+                                        : String(d.result)
+                                    }
+                                  </code>
+                                </div>
                           </div>
                         );
                       })}
