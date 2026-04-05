@@ -1,2 +1,8 @@
-Explication.txt /
 node_modules/
+__pycache__/
+*.pyc
+*.pyo
+.env
+dist/
+.venv/
+venv/
