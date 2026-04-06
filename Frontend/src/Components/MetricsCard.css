@@ -1,59 +1,73 @@
-/* ════════════════════════════════
-   MetricCard.css — AlgoBench
-   ════════════════════════════════ */
-
 .mc {
   position: relative;
-  background: var(--surface, #181B24);
-  border: 1px solid var(--border, rgba(255,255,255,0.07));
-  border-radius: var(--radius, 12px);
-  padding: 20px 22px 22px;
+  background: var(--surface);
+  padding: 18px 18px 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   overflow: hidden;
-  transition: border-color 0.2s, background 0.2s;
+  transition: background 0.2s;
 }
 .mc--highlight {
-  border-color: rgba(0,229,195,0.25);
-  background: rgba(0,229,195,0.04);
+  background: rgba(56,189,248,0.04);
 }
 
 .mc-top {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
 }
+
 .mc-icon {
-  display: flex; align-items: center;
-  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  opacity: 0.75;
 }
+
 .mc-label {
-  font-family: var(--font-mono, 'DM Mono', monospace);
-  font-size: 10px; font-weight: 400;
-  letter-spacing: 1.2px; text-transform: uppercase;
-  color: var(--text-muted, #4A5068);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .mc-value {
-  font-family: var(--font-mono, monospace);
-  font-size: 26px; font-weight: 500;
-  color: var(--text-primary, #F0F2F8);
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text-primary);
   letter-spacing: -0.5px;
   line-height: 1;
 }
 .mc--highlight .mc-value {
-  color: var(--mc-accent, var(--teal, #00E5C3));
+  color: var(--mc-accent, var(--azure));
 }
 
-/* Bottom accent line */
 .mc-bar {
   position: absolute;
-  bottom: 0; left: 0; right: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
   height: 2px;
-  background: var(--mc-accent, var(--teal, #00E5C3));
+  background: var(--mc-accent, var(--azure));
   opacity: 0;
   transition: opacity 0.3s;
 }
-.mc--highlight .mc-bar { opacity: 0.5; }
-.mc:hover .mc-bar { opacity: 0.3; }
+.mc--highlight .mc-bar {
+  opacity: 0.4;
+}
+.mc:hover .mc-bar {
+  opacity: 0.25;
+}
+
+
+@media (max-width: 600px) {
+  .mc {
+    padding: 14px;
+  }
+  .mc-value {
+    font-size: 18px;
+  }
+}
