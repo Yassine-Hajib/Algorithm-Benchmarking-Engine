@@ -1,19 +1,17 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || "";
+// In production (Vercel): API_BASE_URL is empty so calls go to same domain /api/...
+// In development: Vite proxy forwards /api to http://127.0.0.1:8000
+const API_BASE_URL = "";
+
 const ALGO_KEYS = {
-  // Sorting
-  Bubble_Sort:    ["Bubble_sort_Iterative",   "Bubble_sort_Recursive"],
-  Insertion_Sort: ["Insertion_sort_Iterative","Insertion_sort_Recursive"],
-  Quick_Sort:     ["Quick_Sort_Iterative",    "Quick_Sort_Recursive"],
-  Merge_Sort:     ["Merge_Sort_Iterative",    "Merge_Sort_Recursive"],
-  Heap_Sort:      ["Heap_Sort_Iterative",     "Heap_Sort_Recursive"],
-
-  // Searching
-  Binary_Search:  ["Binary_Search_Iterative", "Binary_Search_Recursive"],
-  Linear_Search:  ["Linear_Search_Iterative", "Linear_Search_Recursive"],
-  BFS:            ["BFS_Iterative",           "BFS_Recursive"],
-  DFS:            ["DFS_Iterative",           "DFS_Recursive"],
-
-  // Math
+  Bubble_Sort:    ["Bubble_sort_Iterative",    "Bubble_sort_Recursive"],
+  Insertion_Sort: ["Insertion_sort_Iterative", "Insertion_sort_Recursive"],
+  Quick_Sort:     ["Quick_Sort_Iterative",     "Quick_Sort_Recursive"],
+  Merge_Sort:     ["Merge_Sort_Iterative",     "Merge_Sort_Recursive"],
+  Heap_Sort:      ["Heap_Sort_Iterative",      "Heap_Sort_Recursive"],
+  Binary_Search:  ["Binary_Search_Iterative",  "Binary_Search_Recursive"],
+  Linear_Search:  ["Linear_Search_Iterative",  "Linear_Search_Recursive"],
+  BFS:            ["BFS_Iterative",            "BFS_Recursive"],
+  DFS:            ["DFS_Iterative",            "DFS_Recursive"],
   Fibonacci:      ["Fibonnaci_Iterative",      "Fibonnaci_Recursive"],
   Factorial:      ["factorial_iterative",      "factorial_recursive"],
   Prime_Checker:  ["Prime_Checker_Iterative",  "Prime_Checker_Recursive"],
@@ -23,180 +21,126 @@ const ALGO_KEYS = {
   Hanoi:          ["Hanoi_Iterative",          "Hanoi_Recursive"],
 };
 
-
-export function validateInput(algoId, raw){
+export function validateInput(algoId, raw) {
   const s = raw.trim();
+  if (!s) throw new Error("Input is empty. Please enter a value.");
 
-  if (!s) {
-    throw new Error("Input is empty. Please enter a value.");
-  }
   const plainInt = ["Fibonacci", "Factorial", "Prime_Checker", "Hanoi"];
   if (plainInt.includes(algoId)) {
     const n = Number(s);
-    if (!Number.isInteger(n) || n < 0) {
-      throw new Error(`${algoId} expects a positive integer. Example: 10`);
-    }
-    if (algoId === "Hanoi" && n > 10) {
-      throw new Error("Tower of Hanoi: max 10 disks recommended to avoid huge output.");
-    }
+    if (!Number.isInteger(n) || n < 0)
+      throw new Error(`${algoId.replace(/_/g," ")} expects a positive integer. Example: 10`);
+    if (algoId === "Hanoi" && n > 10)
+      throw new Error("Tower of Hanoi: max 10 disks to avoid huge output.");
     return;
   }
 
-  
   const arrayAlgos = ["Bubble_Sort", "Quick_Sort", "Merge_Sort", "Heap_Sort"];
   if (arrayAlgos.includes(algoId)) {
     let parsed;
     try { parsed = JSON.parse(s); } catch {
-      throw new Error(`${algoId} expects an array. Example: [5, 2, 8, 1, 9]`);
+      throw new Error(`${algoId.replace(/_/g," ")} expects an array. Example: [5, 2, 8, 1, 9]`);
     }
-    if (!Array.isArray(parsed)) {
-      throw new Error(`${algoId} expects an array. Example: [5, 2, 8, 1, 9]`);
-    }
-    if (parsed.length < 2) {
-      throw new Error("Array must have at least 2 elements.");
-    }
-    if (!parsed.every(x => typeof x === "number")) {
+    if (!Array.isArray(parsed))
+      throw new Error(`${algoId.replace(/_/g," ")} expects an array. Example: [5, 2, 8, 1, 9]`);
+    if (parsed.length < 2) throw new Error("Array must have at least 2 elements.");
+    if (!parsed.every(x => typeof x === "number"))
       throw new Error("Array must contain numbers only. Example: [5, 2, 8, 1, 9]");
-    }
     return;
   }
 
-  
   if (algoId === "Insertion_Sort") {
     let parsed;
     try { parsed = JSON.parse(s); } catch {
       throw new Error("Insertion Sort expects an array. Example: [5, 2, 8, 1, 9]");
     }
-    if (!Array.isArray(parsed) || parsed.length < 2) {
+    if (!Array.isArray(parsed) || parsed.length < 2)
       throw new Error("Insertion Sort expects an array with at least 2 elements.");
-    }
+    if (!parsed.every(x => typeof x === "number"))
+      throw new Error("Array must contain numbers only.");
     return;
   }
 
- 
   if (["Binary_Search", "Linear_Search"].includes(algoId)) {
     let parsed;
     try { parsed = JSON.parse(s); } catch {
-      throw new Error(`${algoId} expects an array where the last number is the target.\nExample: [1, 3, 5, 7, 9, 5]`);
+      throw new Error(`${algoId.replace(/_/g," ")} expects an array. Last number is the target.\nExample: [1, 3, 5, 7, 9, 5]`);
     }
-    if (!Array.isArray(parsed)) {
-      throw new Error(`${algoId} expects an array. Example: [1, 3, 5, 7, 9, 5]`);
-    }
-    if (parsed.length < 2) {
+    if (!Array.isArray(parsed) || parsed.length < 2)
       throw new Error("Array must have at least 2 elements. The last one is the target.");
-    }
-    if (!parsed.every(x => typeof x === "number")) {
+    if (!parsed.every(x => typeof x === "number"))
       throw new Error("Array must contain numbers only.");
-    }
     return;
   }
 
-  
   if (["BFS", "DFS"].includes(algoId)) {
     const n = Number(s);
-    if (!isNaN(n) && Number.isInteger(n) && n > 0) return; 
+    if (!isNaN(n) && Number.isInteger(n) && n > 0) return;
     try {
       const parsed = JSON.parse(s);
-      if (!parsed.graph || !parsed.start) {
-        throw new Error();
-      }
+      if (!parsed.graph || !parsed.start) throw new Error();
     } catch {
-      throw new Error(
-        `${algoId} expects a number (e.g. 6) or a graph object.\nExample: {"graph":{"A":["B","C"],"B":[],"C":[]},"start":"A"}`
-      );
+      throw new Error(`${algoId} expects a number (e.g. 6) or a graph object.\nExample: {"graph":{"A":["B","C"],"B":[],"C":[]},"start":"A"}`);
     }
     return;
   }
 
- 
   if (algoId === "Power") {
     const n = Number(s);
-    if (!isNaN(n)) return; 
+    if (!isNaN(n)) return;
     try {
       const parsed = JSON.parse(s);
-      if (typeof parsed.base === "undefined" || typeof parsed.exp === "undefined") {
-        throw new Error();
-      }
+      if (typeof parsed.base === "undefined" || typeof parsed.exp === "undefined") throw new Error();
     } catch {
       throw new Error('Fast Power expects {"base": 2, "exp": 10} or a plain number.');
     }
     return;
   }
 
-  // GCD — expects { "a": number, "b": number }
   if (algoId === "GCD") {
     try {
       const parsed = JSON.parse(s);
-      if (typeof parsed.a === "undefined" || typeof parsed.b === "undefined") {
-        throw new Error();
-      }
+      if (typeof parsed.a === "undefined" || typeof parsed.b === "undefined") throw new Error();
     } catch {
       throw new Error('GCD expects {"a": 48, "b": 18}');
     }
     return;
   }
 
- 
-  if (algoId === "Palindrome") {
-    return; 
-  }
+  if (algoId === "Palindrome") return;
 }
-
-
-
 
 function buildInput(algoId, raw) {
   let parsed;
   try {
     parsed = JSON.parse(raw);
   } catch {
-    // Try as plain number, else keep as string
     const n = Number(raw);
-    parsed = isNaN(n) ? raw.trim().replace(/^"|"$/g, '') : n;
+    parsed = isNaN(n) ? raw.trim().replace(/^"|"$/g, "") : n;
   }
 
   if (["BFS", "DFS"].includes(algoId)) {
     if (typeof parsed === "number") {
-      return {
-        graph: { A: ["B","C"], B: ["D","E"], C: ["F"], D: [], E: [], F: [] },
-        start: "A"
-      };
+      return { graph: { A: ["B","C"], B: ["D","E"], C: ["F"], D: [], E: [], F: [] }, start: "A" };
     }
     return parsed;
   }
-
-  
   if (["Binary_Search", "Linear_Search"].includes(algoId)) {
     const arr = Array.isArray(parsed) ? parsed : [parsed];
     return { arr: arr.slice(0, -1), target: arr[arr.length - 1] };
   }
-
-
   if (algoId === "Insertion_Sort") {
     return { arr: Array.isArray(parsed) ? parsed : [parsed] };
   }
-
   if (["Bubble_Sort", "Quick_Sort", "Merge_Sort", "Heap_Sort"].includes(algoId)) {
     return Array.isArray(parsed) ? parsed : [parsed];
   }
-
-  
   if (algoId === "Hanoi") {
-    const n = typeof parsed === "number" ? parsed : Number(parsed);
-    return { n: Math.min(n, 10) }; //10 disks to avoid huge output
+    return { n: Math.min(typeof parsed === "number" ? parsed : Number(parsed), 10) };
   }
-
-  
-  if (["Power", "GCD"].includes(algoId)) {
-    return parsed;
-  }
-
-  
   if (algoId === "Palindrome") {
     return typeof parsed === "string" ? parsed : String(parsed);
   }
-
-  
   return parsed;
 }
 
@@ -220,15 +164,11 @@ export const api = {
   },
 
   runBenchmark: async (algoId, rawInput, isDual) => {
-   
-  validateInput(algoId, rawInput);
-
+    validateInput(algoId, rawInput);
     const [iterKey, recKey] = ALGO_KEYS[algoId] || [algoId, null];
     const input = buildInput(algoId, rawInput);
-
     const iterData = await runOne(iterKey, input);
     const recData  = (isDual && recKey) ? await runOne(recKey, input) : null;
-
     return { iterative: iterData, recursive: recData };
   },
 };
